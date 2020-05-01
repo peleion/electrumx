@@ -1,0 +1,34 @@
+# docker-compose for electrumx
+
+version: '2.2'
+services:
+    electrumx:
+        image: <your image name>
+        container_name: electrumx
+#       entrypoint: electrumx_compact_history
+        restart: on-failure
+        networks:
+            - <your docker network>
+        ports:
+            - 50002:50002
+        volumes:
+            - electrumx:/srv
+        environment: 
+            COIN: 'BitcoinSegwit'
+            DB_DIRECTORY: '/srv'
+            DAEMON_URL: <RPCuser:RPCpassword@bitcoind-docker-name>
+            SERVICE: 'ssl://0.0.0.0:50002,rpc://0.0.0.0'
+            SERVICES: 'ssl://0.0.0.0:50002,rpc://0.0.0.0'
+            SSL_CERTFILE: '/srv/electrumx.crt'
+            SSL_KEYFILE: '/srv/electrumx.key'
+            LOG_LEVEL: 'info'
+            ALLOW_ROOT: '1'
+            BANNER_FILE: 'banner.txt'
+            PEER_DISCOVERY: 'self'
+            PEER_ANNOUNCE: ''
+            BLACKLIST_URL: ''
+volumes:
+    electrumx:
+networks:
+    <your docker network>:
+        external: true
